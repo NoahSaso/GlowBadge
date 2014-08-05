@@ -16,11 +16,6 @@
 - (BOOL)hasBadge;
 @end
 
-@interface SBIconController : NSObject
-+ (id)sharedInstance;
-- (BOOL)iconViewDisplaysBadges:(id)arg1;
-@end
-
 #define kSettingsPath [NSHomeDirectory() stringByAppendingPathComponent:@"/Library/Preferences/com.sassoty.glowbadge.plist"]
 NSDictionary* prefs = [[NSDictionary alloc] initWithContentsOfFile:kSettingsPath];
 BOOL isEnabled = YES;
