@@ -48,7 +48,11 @@ void checkColor() {
 		daColor = colors[color];
 	}else {
 		//Pick random color
-		daColor = colors[arc4random_uniform([colors count])];
+		int r = arc4random_uniform([colors count]);
+		while(r == 2) {
+			r = arc4random_uniform([colors count]);
+		}
+		daColor = colors[r];
 	}
 }
 
