@@ -40,7 +40,10 @@ NSArray* colors = [[NSArray alloc] initWithObjects:
 	nil
 	];
 
-void checkColor(int color) {
+void checkColor() {
+	int color = [prefs[@"Color"] intValue];
+	if(!prefs[@"Color"]) { color = 0; }
+
 	if(color != 673) {
 		daColor = colors[color];
 	}else {
@@ -57,9 +60,7 @@ void reloadPrefs() {
 	hideBadge = [prefs[@"HideBadge"] boolValue];
 	if(!prefs[@"HideBadge"]) { hideBadge = NO; }
 
-	int color = [prefs[@"Color"] intValue];
-	if(!prefs[@"Color"]) { color = 0; }
-	checkColor(color);
+	checkColor();
 }
 
 @interface SBIconBadgeView : UIView
@@ -93,6 +94,7 @@ void reloadPrefs() {
 		if(daFloat > 15.0f) {
 			daFloat = 15.0f;
 		}
+		checkColor();
 		self.layer.shadowColor = [daColor CGColor];
 		self.layer.shadowRadius = daFloat;
 		self.layer.shadowOpacity = 1.0;
