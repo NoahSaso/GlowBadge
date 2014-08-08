@@ -1,50 +1,26 @@
 #import <Preferences/Preferences.h>
 
-#define kName @"GlowBadge"
+#import "GroupTableView.h"
+
+#define kName @"ConvoProtect"
 #import <Custom/defines.h>
 
-#define kSettingsPath [NSHomeDirectory() stringByAppendingPathComponent:@"/Library/Preferences/com.sassoty.glowbadge.plist"]
+#define kSettingsPath [NSHomeDirectory() stringByAppendingPathComponent:@"/Library/Preferences/com.sassoty.convoprotect.plist"]
 
-@interface GlowBadgeListController: PSListController {
-}
-- (void)openTwitter;
-- (void)openDonate;
-- (void)openWebsite;
-@end
-
-@implementation GlowBadgeListController
-- (id)specifiers {
-	if(_specifiers == nil) {
-		_specifiers = [[self loadSpecifiersFromPlistName:@"GlowBadge" target:self] retain];
-	}
-	return _specifiers;
-}
-- (void)openTwitter {
-	url(@"http://twitter.com/Sassoty");
-}
-- (void)openDonate {
-	url(@"http://bit.ly/sassotypp");
-}
-- (void)openWebsite {
-	url(@"http://sassoty.com");
-}
-@end
-
-// vim:ft=objc
-
-@interface BadgeWhitelistListController: PSViewController <UITableViewDelegate, UITableViewDataSource> {
+@interface LockedWhatsAppListController: PSViewController <UITableViewDelegate, UITableViewDataSource> {
     UITableView *tabView;
-    NSMutableArray *appArray;
+    NSMutableArray *whatsappArray;
     int indexPathToUse;
     NSMutableDictionary *prefs;
 }
 @end
 
-@implementation BadgeWhitelistListController
+@implementation LockedWhatsAppListController
 
 - (void)viewDidLoad {
 
     tabView = [[UITableView alloc] initWithFrame:kBounds];
+    //cpNavBar = [[UINavigationBar alloc] init];
 
     tabView.delegate = self;
     tabView.dataSource = self;
@@ -53,9 +29,9 @@
     prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:kSettingsPath];
     if(!prefs) prefs = [[NSMutableDictionary alloc] init];
     
-    appArray = prefs[@"BadgeWhitelist"];
-    if(!appArray)
-        appArray = [[NSMutableArray alloc] init];
+    whatsappArray = prefs[@"WhatsAppLockedConvos"];
+    if(!whatsappArray)
+        whatsappArray = [[NSMutableArray alloc] init];
 
     [self.view addSubview:tabView];
     [tabView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
@@ -64,7 +40,7 @@
 
 - (NSInteger)tableView:(UITableView* )tableView numberOfRowsInSection:(NSInteger)section{
     if(section == 0) return 1;
-    return [appArray count];
+    return [whatsappArray count];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView* )tableView{
@@ -85,8 +61,8 @@
         if(indexPath.row == 0) {
 
             UIAlertView* alert = [[UIAlertView alloc] 
-            initWithTitle:kName
-            message:@"Please enter the display name exactly as it appears:"
+            initWithTitle:@"ConvoProtect"
+            message:@"Please enter the name exactly as it appears on WhatsApp:"
             delegate:self
             cancelButtonTitle:@"Cancel"
             otherButtonTitles:@"Save", nil];
@@ -94,7 +70,7 @@
             [alert setAlertViewStyle:UIAlertViewStylePlainTextInput];
 
             UITextField* user = [alert textFieldAtIndex:0];
-            [user setPlaceholder:@"App Display Name"];
+            [user setPlaceholder:@"Name"];
 
             [alert setTag:1];
             [alert show];
@@ -109,7 +85,7 @@
         indexPathToUse = indexPath.row;
 
         UIAlertView* alert = [[UIAlertView alloc] 
-            initWithTitle:kName
+            initWithTitle:@"ConvoProtect"
             message:@"Edit name:"
             delegate:self
             cancelButtonTitle:@"Cancel"
@@ -118,8 +94,8 @@
         [alert setAlertViewStyle:UIAlertViewStylePlainTextInput];
 
         UITextField* user = [alert textFieldAtIndex:0];
-        [user setPlaceholder:@"App Display Name"];
-        [user setText:[appArray objectAtIndex:indexPath.row]];
+        [user setPlaceholder:@"Name"];
+        [user setText:[whatsappArray objectAtIndex:indexPath.row]];
 
         [alert setTag:2];
         [alert show];
@@ -132,21 +108,21 @@
 - (void)alertView:(UIAlertView* )alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
     if(buttonIndex == 0) return;
 
-    NSString* app = [alertView textFieldAtIndex:0].text;
+    NSString* whatsapp = [alertView textFieldAtIndex:0].text;
     
     prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:kSettingsPath];
     if (alertView.tag == 1 && buttonIndex == 1) {
 
-        [appArray addObject:app];
+        [whatsappArray addObject:whatsapp];
 
-        prefs[@"BadgeWhitelist"] = appArray;
+        prefs[@"WhatsAppLockedConvos"] = whatsappArray;
         [prefs writeToFile:kSettingsPath atomically:YES];
 
         [tabView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
 
         CFNotificationCenterPostNotification(
             CFNotificationCenterGetDarwinNotifyCenter(),
-            CFSTR("com.sassoty.glowbadge/preferencechanged"),
+            CFSTR("com.sassoty.convoprotect/preferencechanged"),
             NULL,
             NULL,
             true
@@ -157,17 +133,17 @@
     if(alertView.tag == 2) {
         if(buttonIndex == 1) {
 
-            [appArray removeObjectAtIndex:indexPathToUse];
-            [appArray insertObject:app atIndex:indexPathToUse];
+            [whatsappArray removeObjectAtIndex:indexPathToUse];
+            [whatsappArray insertObject:whatsapp atIndex:indexPathToUse];
 
-            prefs[@"BadgeWhitelist"] = appArray;
+            prefs[@"WhatsAppLockedConvos"] = whatsappArray;
             [prefs writeToFile:kSettingsPath atomically:YES];
 
             [tabView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
 
             CFNotificationCenterPostNotification(
                 CFNotificationCenterGetDarwinNotifyCenter(),
-                CFSTR("com.sassoty.glowbadge/preferencechanged"),
+                CFSTR("com.sassoty.convoprotect/preferencechanged"),
                 NULL,
                 NULL,
                 true
@@ -185,19 +161,19 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
 	if(editingStyle == UITableViewCellEditingStyleDelete) {
 
-        NSString* logLog = [NSString stringWithFormat:@"Deleting... %@", [appArray objectAtIndex:indexPath.row]];
+        NSString* logLog = [NSString stringWithFormat:@"Deleting... %@", [whatsappArray objectAtIndex:indexPath.row]];
         XLog(logLog);
 
-		[appArray removeObjectAtIndex:indexPath.row];
+		[whatsappArray removeObjectAtIndex:indexPath.row];
 
-        prefs[@"BadgeWhitelist"] = appArray;
+        prefs[@"WhatsAppLockedConvos"] = whatsappArray;
         [prefs writeToFile:kSettingsPath atomically:YES];
 
         [tabView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
 
         CFNotificationCenterPostNotification(
             CFNotificationCenterGetDarwinNotifyCenter(),
-            CFSTR("com.sassoty.glowbadge/preferencechanged"),
+            CFSTR("com.sassoty.convoprotect/preferencechanged"),
             NULL,
             NULL,
             true
@@ -219,9 +195,9 @@
     // Configure the cell...
     //cell.textLabel.text = [NSString stringWithFormat:@"%@", str];
 
-    if(indexPath.section == 1) cell.textLabel.text = [appArray objectAtIndex:indexPath.row];
+    if(indexPath.section == 1) cell.textLabel.text = [whatsappArray objectAtIndex:indexPath.row];
     if(indexPath.section == 0) {
-        if(indexPath.row == 0) cell.textLabel.text = @"Add App";
+        if(indexPath.row == 0) cell.textLabel.text = @"Add Name";
     }
 
     return cell;

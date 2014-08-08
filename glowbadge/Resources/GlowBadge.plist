@@ -38,19 +38,9 @@
 		</dict>
 		<dict>
 			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<false/>
-			<key>defaults</key>
-			<string>com.sassoty.glowbadge</string>
-			<key>PostNotification</key>
-			<string>com.sassoty.glowbadge/preferencechanged</string>
-			<key>key</key>
-			<string>HideBadge</string>
+			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>Hide Badge</string>
-			<key>icon</key>
-			<string>Check.png</string>
+			<string>Color</string>
 		</dict>
 		<dict>
 			<key>detail</key>
@@ -66,11 +56,12 @@
 			<key>PostNotification</key>
 			<string>com.sassoty.glowbadge/preferencechanged</string>
 			<key>label</key>
-			<string>Color</string>
+			<string>Glow Color</string>
 			<key>validTitles</key>
 			<array>
-				<string>Yellow</string>
 				<string>Random</string>
+				<string>Same as app</string>
+				<string>Yellow</string>
 				<string>Dark Gray</string>
 				<string>Light Gray</string>
 				<string>Gray</string>
@@ -86,8 +77,9 @@
 			</array>
 			<key>validValues</key>
 			<array>
-				<integer>0</integer>
 				<integer>673</integer>
+				<integer>674</integer>
+				<integer>0</integer>
 				<integer>1</integer>
 				<integer>2</integer>
 				<integer>3</integer>
@@ -101,6 +93,54 @@
 				<integer>11</integer>
 				<integer>12</integer>
 			</array>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Show badges for:</string>
+			<key>footerAlignment</key>
+			<integer>1</integer>
+			<key>footerText</key>
+			<string>Show badges: Shows badges for the selected option.
+
+Badge whitelist: Only apps identified in here will have badges when the option 'Apps in list' is selected.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSegmentCell</string>
+			<key>default</key>
+			<integer>3</integer>
+			<key>defaults</key>
+			<string>com.sassoty.glowbadge</string>
+			<key>PostNotification</key>
+			<string>com.sassoty.glowbadge/preferencechanged</string>
+			<key>detail</key>
+			<string>PSListItemsController</string>
+			<key>key</key>
+			<string>ShowBadges</string>
+			<key>validTitles</key>
+			<array>
+				<string>No apps</string>
+				<string>Only folders</string>
+				<string>Apps in list</string>
+				<string>All apps</string>
+			</array>
+			<key>validValues</key>
+			<array>
+				<integer>0</integer>
+				<integer>1</integer>
+				<integer>2</integer>
+				<integer>3</integer>
+			</array>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>detail</key>
+			<string>BadgeWhitelistListController</string>
+			<key>label</key>
+			<string>Badge Whitelist</string>
 		</dict>
 		<dict>
 			<key>cell</key>

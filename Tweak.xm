@@ -1,13 +1,21 @@
 #import <QuartzCore/QuartzCore.h>
+#import "UIImage-DominantColor/UIImage+DominantColor.h"
 
 #define kName @"GlowBadge"
 #import <Custom/defines.h>
 
 #include <stdlib.h>
 
+#define kHideBadges 0
+#define kOnlyFolders 1
+#define kListApps 2
+#define kShowBadges 3
+
 @interface SBIcon : NSObject
 - (id)badgeNumberOrString;
 - (id)displayName;
+- (id)getIconImage:(int)arg1;
+- (BOOL)isFolderIcon;
 @end
 
 @interface SBIconView : UIView
@@ -19,9 +27,11 @@
 #define kSettingsPath [NSHomeDirectory() stringByAppendingPathComponent:@"/Library/Preferences/com.sassoty.glowbadge.plist"]
 NSDictionary* prefs = [[NSDictionary alloc] initWithContentsOfFile:kSettingsPath];
 BOOL isEnabled = YES;
-BOOL hideBadge = NO;
+int showBadge = kShowBadges;
+NSArray* badgeWhitelist = [[NSArray alloc] init];
 
 UIColor* daColor;
+BOOL sameAsApp = NO;
 
 NSArray* colors = [[NSArray alloc] initWithObjects:
 	[UIColor yellowColor],
@@ -44,15 +54,22 @@ void checkColor() {
 	int color = [prefs[@"Color"] intValue];
 	if(!prefs[@"Color"]) { color = 0; }
 
-	if(color != 673) {
+	if(color != 673 && color != 674) {
+		sameAsApp = NO;
 		daColor = colors[color];
-	}else {
+	}else if(color == 673) {
+		sameAsApp = NO;
 		//Pick random color
 		int r = arc4random_uniform([colors count]);
 		while(r == 2) {
 			r = arc4random_uniform([colors count]);
 		}
 		daColor = colors[r];
+	}else if(color == 674){
+		sameAsApp = YES;
+	}else {
+		sameAsApp = NO;
+		daColor = [UIColor yellowColor];
 	}
 }
 
@@ -61,8 +78,12 @@ void reloadPrefs() {
 	
 	isEnabled = [prefs[@"Enabled"] boolValue];
 	if(!prefs[@"Enabled"]) { isEnabled = YES; }
-	hideBadge = [prefs[@"HideBadge"] boolValue];
-	if(!prefs[@"HideBadge"]) { hideBadge = NO; }
+
+	showBadge = [prefs[@"ShowBadges"] intValue];
+	if(!prefs[@"ShowBadges"]) { showBadge = kShowBadges; }
+
+	badgeWhitelist = prefs[@"BadgeWhitelist"];
+	if(!badgeWhitelist) { badgeWhitelist = [[NSArray alloc] init]; }
 
 	checkColor();
 }
@@ -74,10 +95,36 @@ void reloadPrefs() {
 
 - (void)layoutSubviews {
 	%orig;
-	if(isEnabled && hideBadge) {
-		self.alpha = 0.0;
-	}else {
-		self.alpha = 1.0;
+	if(!isEnabled) {
+		self.hidden = NO;
+	}
+	SBIconView* iconView = (SBIconView *)[self superview];
+	switch(showBadge) {
+		case kHideBadges:
+			self.hidden = YES;
+			break;
+		case kOnlyFolders: {
+			if([iconView.icon isFolderIcon]) {
+				self.hidden = NO;
+			}else {
+				self.hidden = YES;
+			}
+			break;
+		}
+		case kListApps: {
+			if([badgeWhitelist containsObject:[iconView.icon displayName]]) {
+				self.hidden = NO;
+			}else {
+				self.hidden = YES;
+			}
+			break;
+		}
+		case kShowBadges:
+			self.hidden = NO;
+			break;
+		default:
+			self.hidden = NO;
+			break;
 	}
 }
 
@@ -88,17 +135,24 @@ void reloadPrefs() {
 - (void)layoutSubviews {
 	%orig;
 	if(isEnabled && [self hasBadge]) {
-		if(!daColor) {
+		if(!daColor && !sameAsApp) {
 			reloadPrefs();
 		}
+
 		CGFloat daFloat = [self calculateRadius];
 		if(daFloat <= 4.0f) {
 			return;
 		}
-		if(daFloat > 15.0f) {
-			daFloat = 15.0f;
+		if(daFloat > 17.5f) {
+			daFloat = 17.5f;
 		}
-		checkColor();
+
+		if(!sameAsApp) {
+			checkColor();
+		}else {
+			daColor = [(UIImage *)[self.icon getIconImage:2] dominantColor];
+		}
+
 		self.layer.shadowColor = [daColor CGColor];
 		self.layer.shadowRadius = daFloat;
 		self.layer.shadowOpacity = 1.0;
@@ -130,7 +184,7 @@ void reloadPrefs() {
 	if([badge isKindOfClass:[NSNumber class]]) {
 
 		CGFloat returnFloat = (CGFloat) [badge floatValue] * 2.0f;
-		returnFloat += 4.0f;
+		returnFloat += 6.0f;
 
 		return returnFloat;
 
