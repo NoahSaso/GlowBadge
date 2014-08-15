@@ -24,9 +24,15 @@
 - (BOOL)hasBadge;
 @end
 
+@interface SBFolderIconView : SBIconView
+- (BOOL)folderHasBadge;
+- (CGFloat)calculateFolderRadius;
+@end
+
 #define kSettingsPath [NSHomeDirectory() stringByAppendingPathComponent:@"/Library/Preferences/com.sassoty.glowbadge.plist"]
 NSDictionary* prefs = [[NSDictionary alloc] initWithContentsOfFile:kSettingsPath];
 BOOL isEnabled = YES;
+BOOL isFolderEnabled = YES;
 int showBadge = kShowBadges;
 NSArray* badgeWhitelist = [[NSArray alloc] init];
 
@@ -78,6 +84,9 @@ void reloadPrefs() {
 	
 	isEnabled = [prefs[@"Enabled"] boolValue];
 	if(!prefs[@"Enabled"]) { isEnabled = YES; }
+
+	isFolderEnabled = [prefs[@"FoldersEnabled"] boolValue];
+	if(!prefs[@"FoldersEnabled"]) { isFolderEnabled = YES; }
 
 	showBadge = [prefs[@"ShowBadges"] intValue];
 	if(!prefs[@"ShowBadges"]) { showBadge = kShowBadges; }
@@ -182,6 +191,72 @@ void reloadPrefs() {
 	id badge = [self.icon badgeNumberOrString];
 
 	if([badge isKindOfClass:[NSNumber class]]) {
+
+		CGFloat returnFloat = (CGFloat) [badge floatValue] * 2.0f;
+		returnFloat += 6.0f;
+
+		return returnFloat;
+
+	}
+
+	return 0.0f;
+
+}
+
+%end
+
+%hook SBFolderIconView
+
+- (void)layoutSubviews {
+	%orig;
+	if(isFolderEnabled && [self folderHasBadge]) {
+		if(!daColor && !sameAsApp) {
+			reloadPrefs();
+		}
+
+		CGFloat daFloat = [self calculateFolderRadius];
+		if(daFloat <= 4.0f) {
+			return;
+		}
+		if(daFloat > 17.5f) {
+			daFloat = 17.5f;
+		}
+
+		if(!sameAsApp) {
+			checkColor();
+		}else {
+			daColor = [(UIImage *)[self.icon getIconImage:2] dominantColor];
+		}
+
+		self.layer.shadowColor = [daColor CGColor];
+		self.layer.shadowRadius = daFloat;
+		self.layer.shadowOpacity = 1.0;
+		self.layer.shadowOffset = CGSizeZero;
+		self.layer.masksToBounds = NO;
+	}else {
+		self.layer.shadowColor = [[UIColor clearColor] CGColor];
+		self.layer.shadowRadius = 0.0f;
+		self.layer.shadowOpacity = 0.0;
+	}
+}
+
+%new
+- (BOOL)folderHasBadge {
+	id badge = [self.icon badgeNumberOrString];
+
+	if(badge) {
+		return YES;
+	}else {
+		return NO;
+	}
+}
+
+%new
+- (CGFloat)calculateFolderRadius {
+
+	id badge = [self.icon badgeNumberOrString];
+
+	if(badge) {
 
 		CGFloat returnFloat = (CGFloat) [badge floatValue] * 2.0f;
 		returnFloat += 6.0f;
