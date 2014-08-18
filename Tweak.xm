@@ -176,8 +176,19 @@ void reloadPrefs() {
 
 %new
 - (BOOL)hasBadge {
+	if([self isKindOfClass:[%c(SBRecycledViewsContainer) class]]) {
+		return NO;
+	}
+
 	id badge = [self.icon badgeNumberOrString];
 
+	NSCharacterSet* notNumbers = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789"] invertedSet];
+
+	if([badge isKindOfClass:[NSString class]]) {
+		if(!IS_EMPTY(badge) && [badge rangeOfCharacterFromSet:notNumbers].location == NSNotFound) {
+			return YES;
+		}
+	}
 	if([badge isKindOfClass:[NSNumber class]]) {
 		return YES;
 	}else {
@@ -190,13 +201,12 @@ void reloadPrefs() {
 
 	id badge = [self.icon badgeNumberOrString];
 
-	if([badge isKindOfClass:[NSNumber class]]) {
-
+	//Double check
+	if([badge isKindOfClass:[NSNumber class]] || [badge isKindOfClass:[NSString class]]) {
 		CGFloat returnFloat = (CGFloat) [badge floatValue] * 2.0f;
 		returnFloat += 6.0f;
 
 		return returnFloat;
-
 	}
 
 	return 0.0f;
