@@ -53,6 +53,7 @@ NSArray* colors = [[NSArray alloc] initWithObjects:
 	[UIColor purpleColor],
 	[UIColor brownColor],
 	[UIColor blackColor],
+	[UIColor whiteColor],
 	nil
 	];
 
@@ -185,7 +186,7 @@ void reloadPrefs() {
 	NSCharacterSet* notNumbers = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789"] invertedSet];
 
 	if([badge isKindOfClass:[NSString class]]) {
-		if(!IS_EMPTY(badge) && [badge rangeOfCharacterFromSet:notNumbers].location == NSNotFound) {
+		if(!XIS_EMPTY(badge) && [badge rangeOfCharacterFromSet:notNumbers].location == NSNotFound) {
 			return YES;
 		}
 	}
