@@ -5,7 +5,7 @@
 
 #define kSettingsPath [NSHomeDirectory() stringByAppendingPathComponent:@"/Library/Preferences/com.sassoty.glowbadge.plist"]
 
-#define CDarkRedColor [UIColor colorWithRed:0.75 green:0 blue:0 alpha:1]
+#define CDarkRedColor [UIColor colorWithRed:0.85 green:0 blue:0 alpha:1]
 
 @interface GlowBadgeListController: PSListController {
 }
