@@ -33,8 +33,6 @@
 			<string>Enabled</string>
 			<key>label</key>
 			<string>Enabled</string>
-			<key>icon</key>
-			<string>Check.png</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -49,8 +47,6 @@
 			<string>FoldersEnabled</string>
 			<key>label</key>
 			<string>Folders Enabled</string>
-			<key>icon</key>
-			<string>Check.png</string>
 		</dict>
 		<dict>
 			<key>cell</key>
