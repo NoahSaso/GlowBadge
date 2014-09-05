@@ -5,6 +5,8 @@
 
 #define kSettingsPath [NSHomeDirectory() stringByAppendingPathComponent:@"/Library/Preferences/com.sassoty.glowbadge.plist"]
 
+#define CDarkRedColor [UIColor colorWithRed:0.75 green:0 blue:0 alpha:1]
+
 @interface GlowBadgeListController: PSListController {
 }
 - (void)openTwitter;
@@ -17,16 +19,22 @@
 	if(_specifiers == nil) {
 		_specifiers = [[self loadSpecifiersFromPlistName:@"GlowBadge" target:self] retain];
 	}
+
+    [UISwitch appearanceWhenContainedIn:self.class, nil].tintColor = CDarkRedColor;
+    [UISwitch appearanceWhenContainedIn:self.class, nil].onTintColor = CDarkRedColor;
+    [UISegmentedControl appearanceWhenContainedIn:self.class, nil].tintColor = CDarkRedColor;
+    [UISlider appearanceWhenContainedIn:self.class, nil].tintColor = CDarkRedColor;
+
 	return _specifiers;
 }
 - (void)openTwitter {
-	url(@"http://twitter.com/Sassoty");
+	Xurl(@"http://twitter.com/Sassoty");
 }
 - (void)openDonate {
-	url(@"http://bit.ly/sassotypp");
+	Xurl(@"http://bit.ly/sassotypp");
 }
 - (void)openWebsite {
-	url(@"http://sassoty.com");
+	Xurl(@"http://sassoty.com");
 }
 @end
 
@@ -44,7 +52,7 @@
 
 - (void)viewDidLoad {
 
-    tabView = [[UITableView alloc] initWithFrame:kBounds];
+    tabView = [[UITableView alloc] initWithFrame:XBounds];
 
     tabView.delegate = self;
     tabView.dataSource = self;

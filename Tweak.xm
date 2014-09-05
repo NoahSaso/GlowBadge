@@ -35,6 +35,8 @@ BOOL isEnabled = YES;
 BOOL isFolderEnabled = YES;
 int showBadge = kShowBadges;
 NSArray* badgeWhitelist = [[NSArray alloc] init];
+BOOL customStrengthEnabled = NO;
+CGFloat customStrength = 5.0;
 
 UIColor* daColor;
 BOOL sameAsApp = NO;
@@ -95,6 +97,12 @@ void reloadPrefs() {
 	badgeWhitelist = prefs[@"BadgeWhitelist"];
 	if(!badgeWhitelist) { badgeWhitelist = [[NSArray alloc] init]; }
 
+	customStrengthEnabled = [prefs[@"CustomStrengthEnabled"] boolValue];
+	if(!prefs[@"CustomStrengthEnabled"]) { customStrengthEnabled = YES; }
+
+	customStrength = [prefs[@"CustomStrength"] floatValue];
+	if(!prefs[@"CustomStrength"]) { customStrength = 5.0; }
+
 	checkColor();
 }
 
@@ -149,7 +157,12 @@ void reloadPrefs() {
 			reloadPrefs();
 		}
 
-		CGFloat daFloat = [self calculateRadius];
+		CGFloat daFloat;
+		if(customStrengthEnabled)
+			daFloat = customStrength;
+		else
+			daFloat = [self calculateRadius];
+
 		if(daFloat <= 4.0f) {
 			return;
 		}

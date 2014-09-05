@@ -164,6 +164,44 @@ Badge whitelist: Only apps identified in here will have badges when the option '
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
+			<string>Strength</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.sassoty.glowbadge</string>
+			<key>PostNotification</key>
+			<string>com.sassoty.glowbadge/preferencechanged</string>
+			<key>key</key>
+			<string>CustomStrengthEnabled</string>
+			<key>label</key>
+			<string>Custom Strength Enabled</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>defaults</key>
+			<string>com.sassoty.glowbadge</string>
+			<key>PostNotification</key>
+			<string>com.sassoty.glowbadge/preferencechanged</string>
+			<key>default</key>
+			<real>5.0</real>
+			<key>min</key>
+			<real>5.0</real>
+			<key>max</key>
+			<real>17.5</real>
+			<key>showValue</key>
+			<true/>
+			<key>key</key>
+			<string>CustomStrength</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
 			<string>About</string>
 		</dict>
 		<dict>
