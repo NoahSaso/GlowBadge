@@ -231,6 +231,12 @@ Badge whitelist: Only apps identified in here will have badges when the option '
 			<string>openWebsite</string>
 		</dict>
 		<dict>
+		    <key>cell</key>
+		    <string>PSGroupCell</string>
+		    <key>footerCellClass</key>
+		    <string>ThanksCell</string>
+		</dict>
+		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerAlignment</key>

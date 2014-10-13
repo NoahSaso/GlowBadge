@@ -17,7 +17,7 @@
 @implementation GlowBadgeListController
 - (id)specifiers {
 	if(_specifiers == nil) {
-		_specifiers = [[self loadSpecifiersFromPlistName:@"GlowBadge" target:self] retain];
+		_specifiers = [self loadSpecifiersFromPlistName:@"GlowBadge" target:self];
 	}
 
     [UISwitch appearanceWhenContainedIn:self.class, nil].tintColor = CDarkRedColor;
@@ -106,7 +106,7 @@
 
             [alert setTag:1];
             [alert show];
-            [alert release];
+            //[alert release];
 
         }
 
@@ -131,7 +131,7 @@
 
         [alert setTag:2];
         [alert show];
-        [alert release];
+        //[alert release];
 
     }
 

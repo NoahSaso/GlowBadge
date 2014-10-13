@@ -74,7 +74,7 @@
 
             [alert setTag:1];
             [alert show];
-            [alert release];
+            //[alert release];
 
         }
 
@@ -99,7 +99,7 @@
 
         [alert setTag:2];
         [alert show];
-        [alert release];
+        //[alert release];
 
     }
 

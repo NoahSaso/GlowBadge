@@ -1,9 +1,11 @@
 include theos/makefiles/common.mk
 
+ADDITIONAL_OBJCFLAGS=-fobjc-arc
+
 BUNDLE_NAME = GlowBadge
-GlowBadge_FILES = GlowBadge.mm HeaderCell.mm
+GlowBadge_FILES = GlowBadge.mm HeaderCell.mm ThanksCell.mm thanks/TTTAttributedLabel.m
 GlowBadge_INSTALL_PATH = /Library/PreferenceBundles
-GlowBadge_FRAMEWORKS = UIKit
+GlowBadge_FRAMEWORKS = UIKit CoreText CoreGraphics QuartzCore
 GlowBadge_PRIVATE_FRAMEWORKS = Preferences
 
 include $(THEOS_MAKE_PATH)/bundle.mk
