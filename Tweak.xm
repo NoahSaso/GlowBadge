@@ -190,9 +190,8 @@ void reloadPrefs() {
 
 %new
 - (BOOL)hasBadge {
-	if([self isKindOfClass:[%c(SBRecycledViewsContainer) class]]) {
+	if(![self isKindOfClass:[%c(SBIcon) class]])
 		return NO;
-	}
 
 	id badge = [self.icon badgeNumberOrString];
 
@@ -203,11 +202,10 @@ void reloadPrefs() {
 			return YES;
 		}
 	}
-	if([badge isKindOfClass:[NSNumber class]]) {
+	if([badge isKindOfClass:[NSNumber class]])
 		return YES;
-	}else {
+	else
 		return NO;
-	}
 }
 
 %new
@@ -234,23 +232,19 @@ void reloadPrefs() {
 - (void)layoutSubviews {
 	%orig;
 	if(isFolderEnabled && [self folderHasBadge]) {
-		if(!daColor && !sameAsApp) {
+		if(!daColor && !sameAsApp)
 			reloadPrefs();
-		}
 
 		CGFloat daFloat = [self calculateFolderRadius];
-		if(daFloat <= 4.0f) {
+		if(daFloat <= 4.0f)
 			return;
-		}
-		if(daFloat > 17.5f) {
+		if(daFloat > 17.5f)
 			daFloat = 17.5f;
-		}
 
-		if(!sameAsApp) {
+		if(!sameAsApp)
 			checkColor();
-		}else {
+		else
 			daColor = [(UIImage *)[self.icon getIconImage:2] dominantColor];
-		}
 
 		self.layer.shadowColor = [daColor CGColor];
 		self.layer.shadowRadius = daFloat;
@@ -268,11 +262,10 @@ void reloadPrefs() {
 - (BOOL)folderHasBadge {
 	id badge = [self.icon badgeNumberOrString];
 
-	if(badge) {
+	if(badge)
 		return YES;
-	}else {
+	else
 		return NO;
-	}
 }
 
 %new
@@ -281,12 +274,10 @@ void reloadPrefs() {
 	id badge = [self.icon badgeNumberOrString];
 
 	if(badge) {
-
 		CGFloat returnFloat = (CGFloat) [badge floatValue] * 2.0f;
 		returnFloat += 6.0f;
 
 		return returnFloat;
-
 	}
 
 	return 0.0f;
