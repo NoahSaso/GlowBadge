@@ -178,19 +178,19 @@ void reloadPrefs() {
 
 		self.layer.shadowColor = [daColor CGColor];
 		self.layer.shadowRadius = daFloat;
-		self.layer.shadowOpacity = 1.0;
+		self.layer.shadowOpacity = 1;
 		self.layer.shadowOffset = CGSizeZero;
 		self.layer.masksToBounds = NO;
 	}else {
 		self.layer.shadowColor = [[UIColor clearColor] CGColor];
-		self.layer.shadowRadius = 0.0f;
-		self.layer.shadowOpacity = 0.0;
+		self.layer.shadowRadius = 0;
+		self.layer.shadowOpacity = 0;
 	}
 }
 
 %new
 - (BOOL)hasBadge {
-	if(![self isKindOfClass:[%c(SBIcon) class]])
+	if(![self isKindOfClass:[%c(SBIconView) class]])
 		return NO;
 
 	id badge = [self.icon badgeNumberOrString];
